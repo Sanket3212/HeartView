@@ -143,9 +143,7 @@ export default function ChatPage() {
 
 
   return (
-    <div className="container mx-auto p-4 md:p-8 flex flex-col h-[calc(100vh_-_var(--header-height)_-_var(--footer-height)_-_2rem)] md:h-[calc(100vh_-_var(--header-height)_-_var(--footer-height)_-_4rem)]"
-         style={{'--header-height': '65px', '--footer-height': '57px'} as React.CSSProperties} // Adjust these values based on actual header/footer height
-    >
+    <div className="container mx-auto p-4 md:p-8 flex flex-col flex-1">
       <Card className="w-full max-w-2xl mx-auto flex flex-col flex-grow shadow-xl" data-ai-hint="chat interface">
         <CardHeader className="border-b">
           <CardTitle className="flex items-center gap-2 text-xl">
