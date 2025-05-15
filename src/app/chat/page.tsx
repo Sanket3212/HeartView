@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Send, User, Bot, AlertCircle } from "lucide-react";
 import { askChatbot, type ChatInput, type ChatOutput } from '@/ai/flows/chat-flow';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'; // Added Avatar
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'; // Removed AvatarImage as it's not used
 
 interface ChatMessage {
   id: string;
@@ -63,10 +63,6 @@ export default function ChatPage() {
 
     try {
       const chatInput: ChatInput = { message: userMessage.content };
-      // If implementing history:
-      // const historyForAI = messages.map(m => ({role: m.role, content: m.content}));
-      // chatInput.history = historyForAI;
-
       const result: ChatOutput = await askChatbot(chatInput);
       
       const botMessage: ChatMessage = {
@@ -81,14 +77,6 @@ export default function ChatPage() {
       console.error("Chatbot Error:", e);
       const errorMessage = e instanceof Error ? e.message : "An unexpected error occurred with the chatbot.";
       setError(errorMessage);
-      // Optionally add an error message to the chat
-      // const errorBotMessage: ChatMessage = {
-      //   id: crypto.randomUUID(),
-      //   role: 'assistant',
-      //   content: "I'm sorry, I encountered an error. Please try again.",
-      //   timestamp: new Date(),
-      // };
-      // setMessages(prevMessages => [...prevMessages, errorBotMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -101,13 +89,6 @@ export default function ChatPage() {
   ];
 
   const handleQuickQuestion = (question: string) => {
-    setInputValue(question);
-    // Trigger form submission logic directly
-    // This requires handleSendMessage to not strictly rely on the event object
-    // or to simulate a submission if needed.
-    // For simplicity, we can just set the input value and let the user click send,
-    // or call a modified submit logic.
-    // Let's try to submit it directly.
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -115,11 +96,10 @@ export default function ChatPage() {
       timestamp: new Date(),
     };
     setMessages(prevMessages => [...prevMessages, userMessage]);
-    setInputValue(""); // Clear input after setting
+    setInputValue(""); 
     setIsLoading(true);
     setError(null);
 
-    // Inline the rest of handleSendMessage logic for the quick question
     (async () => {
       try {
         const chatInput: ChatInput = { message: userMessage.content };
@@ -152,7 +132,7 @@ export default function ChatPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="flex-grow p-0 flex flex-col">
-          <ScrollArea className="flex-grow p-4" viewportRef={scrollAreaRef}>
+          <ScrollArea className="flex-grow p-4 min-h-0" viewportRef={scrollAreaRef}>
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -167,7 +147,7 @@ export default function ChatPage() {
                     </Avatar>
                   )}
                   <div
-                    className={`max-w-[70%] rounded-xl px-4 py-2.5 shadow-md text-sm ${
+                    className={`max-w-[80%] sm:max-w-[70%] rounded-xl px-4 py-2.5 shadow-md text-sm ${
                       message.role === 'user'
                         ? 'bg-primary text-primary-foreground rounded-br-none'
                         : 'bg-card border border-border text-card-foreground rounded-bl-none'
@@ -204,7 +184,7 @@ export default function ChatPage() {
             </div>
           </ScrollArea>
 
-          {messages.length <= 1 && ( // Show quick questions only if it's just the initial greeting
+          {messages.length <= 1 && ( 
             <div className="p-4 border-t">
               <p className="text-sm text-muted-foreground mb-2">Or try a quick question:</p>
               <div className="flex flex-wrap gap-2">
